@@ -3,10 +3,33 @@ var app = express();
 var routes = require('./routes');
 var errorHandler = require('./middlewares/errorHandler')
 var log = require('./middlewares/log');
+var partials = require('express-partials')
+var cookieParser = require('cookie-parser')
+var session = require('express-session')
+var RedisStore = require('connect-redis')(session);
+
 
 app.set('view engine', 'ejs')
+app.set('view options', {defaultLayout : 'layout'})
+app.use(partials());
 app.use(log.logger)
 app.use(express.static(__dirname + 'static'));
+app.use(cookieParser('secret'))
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true,
+    store: new RedisStore(
+      {url: 'redis://localhost'})
+    })
+  );
+  app.use(function(req, res, next){
+    if(req.session.pageCount)
+      req.session.pageCount++;
+    else
+      req.session.pageCount = 1;
+    next();
+  });
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.post('/login', routes.loginProcess);    
