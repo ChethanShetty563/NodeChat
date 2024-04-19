@@ -8,13 +8,14 @@ function index(req, res){
  
 };
 function login(req, res){
-  res.render('login', {layout : 'layout', title : 'Login'});
+  res.render('login', {layout : 'layout', title : 'Login', message : req.flash('error')});
 };
 function loginProcess(req, res){
   var isAuth = util.auth(req.body.username, req.body.password, req.session);
   if (isAuth) {
     res.redirect('/chat');
   }else {
+    req.flash('error','Wrong username and password')
     res.redirect('/login');
   }
 };

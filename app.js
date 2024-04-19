@@ -10,6 +10,7 @@ var session = require('express-session')
 var bodyParser =  require('body-parser')
 var csrf = require('csurf');
 var util = require('./middlewares/utilities')
+var flash = require('connect-flash');
 
 
 
@@ -28,6 +29,7 @@ app.use(session({
     })
   );
   app.use(bodyParser.json());
+  app.use(flash())
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(csrf());
 app.use(util.csrf);
