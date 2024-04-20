@@ -1,5 +1,6 @@
 // const session = require("express-session");
 var util = require('../middlewares/utilities');
+var config = require('../config');
 
 
 function index(req, res){
@@ -16,7 +17,7 @@ function loginProcess(req, res){
     res.redirect('/chat');
   }else {
     req.flash('error','Wrong username and password')
-    res.redirect('/login');
+    res.redirect(config.routes.login);
   }
 };
 function chat(req, res){
